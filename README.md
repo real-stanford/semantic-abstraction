@@ -12,7 +12,7 @@ Columbia University, New York, NY, United States
 [![HuggingFace Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/huy-ha/semabs-relevancy)
 
 <div style="margin:50px; text-align: justify;">
-<img style="width:100%;" src="teaser.gif">
+<img style="width:100%;" src="assets/teaser.gif">
 
 Our approach, Semantic Abstraction, unlocks 2D VLM's capabilities to 3D scene understanding. Trained with a limited synthetic dataset, our model generalizes to unseen classes in a novel domain (i.e., real world), even for small objects like “rubiks cube”, long-tail concepts like “harry potter”, and hidden objects like the “used N95s in the garbage bin”. Unseen classes are bolded.
 
@@ -47,6 +47,7 @@ If you have any questions, please contact [me](https://www.cs.columbia.edu/~huy/
 - [Evaluation](#evaluation)
   - [Summarize](#summarize)
   - [Run inference](#run-inference)
+  - [Visualization](#visualization)
 - [Training](#training)
   - [OVSSC](#ovssc)
   - [VOOL](#vool)
@@ -259,11 +260,57 @@ Similarly, for VOOL
 python -m torch.distributed.run --nnodes=1 --nproc_per_node=1 eval.py --task vool  --file_path dataset/  --gpus 0 --load models/ours/vool/vool.pth
 ```
 
+## Visualization
+
+The `visualize.py` script takes as input the scene pickle file and the network checkpoint.
+
+The pickle file should be a dictionary with the following keys and types
+```python
+rgb: np.ndarray # shape h x w x 3
+depth: np.ndarray # shape h x w
+img_shape: Tuple[int, int]
+cam_intr: np.ndarray # shape 4 x 4
+cam_extr: np.ndarray # shape 4 x 4
+ovssc_obj_classes: List[str]
+descriptions: List[List[str]]
+```
+After being loaded, `rgb` and `depth` will be resized to `img_shape`, which matches the image dimensions in `cam_intr`.
+Each element in descriptions is a list containing the target object name, spatial preposition and reference object name respectively.
+We provide some example scene pickle files from [Habitat Matterport 3D](https://aihabitat.org/datasets/hm3d/) and [ARKitScenes](https://github.com/apple/ARKitScenes) in `scene_files/`.
+
+Visualizing OVSSC generates a `.mp4` video of the completion, along with `.obj` meshes, while visualizing VOOL generates `.mp4` videos along with `.ply` pointclouds for each description.
+
+For instance, running 
+```sh
+# OVSSC
+python visualize.py ovssc-inference scene_files/arkit_vn_poster.pkl models/ours/ovssc/ovssc.pth
+python visualize.py ovssc-visualize visualization/arkit_vn_poster
+# VOOL
+python visualize.py vool-inference scene_files/arkit_vn_poster.pkl models/ours/vool/vool.pth
+python visualize.py vool-visualize visualization/arkit_vn_poster
+```
+Will output to `visualization/arkit_vn_poster`, including the following relevancies
+
+![](assets/vn_poster_relevancies.png)
+
+and the following VOOL localization for `the hair dryer with its wires all tangled up behind the table legs` and OVSSC completion:
+
+| RGB                              | Localization                            | Completion                            |
+| -------------------------------- | --------------------------------------- | ------------------------------------- |
+| ![](assets/hair_dryer_scene.png) | ![](assets/hair_dryer_behind_table.gif) | ![](assets/hair_dryer_completion.gif) |
+
+
+While these visualizations are sufficient for debugging, I recommend using the `ply` and `obj` files to render in Blender.
+
+
+| Legend                                               | Localization                                  |
+| ---------------------------------------------------- | --------------------------------------------- |
+| ![](assets/hair_dryer_completion_blender_legend.png) | ![](assets/hair_dryer_completion_blender.gif) |
+
+
 # Training
 
-```
 To train the models, make sure the dataset is [downloaded](#dataset-optional).
-```
 
 ## OVSSC
 
@@ -343,8 +390,6 @@ Code:
 
 
 Coming soon:
- - [ ] NYU zeroshot inference instructions
- - [ ] HuggingFace Spaces for generating HM3D inference
  - [ ] THOR data generation instructions
 
 ![](https://visitor-badge.glitch.me/badge?page_id=huy-ha.semabs-relevancy)

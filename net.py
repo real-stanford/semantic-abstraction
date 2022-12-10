@@ -56,7 +56,7 @@ class VirtualGrid:
         if include_batch:
             dims = (batch_size,) + grid_shape
         axis_coords = [torch.arange(0, x, device=device, dtype=int_dtype) for x in dims]
-        coords_per_axis = torch.meshgrid(*axis_coords)
+        coords_per_axis = torch.meshgrid(*axis_coords, indexing="ij")
         grid_idxs = torch.stack(coords_per_axis, dim=-1)
         return grid_idxs
 

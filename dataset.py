@@ -1009,7 +1009,9 @@ class SceneCompletionDataset(SceneUnderstandDataset):
                 file=f,
                 num_subsample_patches=self.num_patches if not self.return_vis else -1,
                 full_objid_pts=retvals["full_objid_pts"],
-                out_of_frustum_pts_mask=retvals["out_of_frustum_pts_mask"],
+                out_of_frustum_pts_mask=retvals["out_of_frustum_pts_mask"]
+                if "out_of_frustum_pts_mask" in retvals
+                else None,
                 saliency_config=self.saliency_config,
                 subtract_mean_relevancy=self.subtract_mean_relevancy,
                 use_synonyms=self.use_synonyms,
@@ -1207,20 +1209,20 @@ class SceneCompletionDataset(SceneUnderstandDataset):
         except Exception as e:
             kwargs["transform_matrix"] = None
             self.transform_retvals(**kwargs)
-
-        retvals["out_of_frustum_pts_mask"] = ~torch.from_numpy(
-            np.stack(
-                [
-                    check_pts_in_frustum(
-                        xyz_pts=xyz_pts,
-                        depth=depth,
-                        cam_pose=cam_pose,
-                        cam_intr=cam_intr,
-                    )
-                    for xyz_pts in retvals["output_xyz_pts"].cpu().numpy()
-                ]
+        if "output_xyz_pts" in retvals:
+            retvals["out_of_frustum_pts_mask"] = ~torch.from_numpy(
+                np.stack(
+                    [
+                        check_pts_in_frustum(
+                            xyz_pts=xyz_pts,
+                            depth=depth,
+                            cam_pose=cam_pose,
+                            cam_intr=cam_intr,
+                        )
+                        for xyz_pts in retvals["output_xyz_pts"].cpu().numpy()
+                    ]
+                )
             )
-        )
 
         if self.xyz_pts_noise > 0.0:
             retvals["output_xyz_pts"] += (

@@ -138,9 +138,9 @@ class ClipWrapper:
         text_labels,
         horizontal_flipping=False,
         positive_attn_only: bool = False,
-        tile_batch_size=16,
+        tile_batch_size=32,
         prompt_batch_size=32,
-        tile_interpolate_batch_size=16,
+        tile_interpolate_batch_size=32,
         **kwargs
     ):
         cls.clip_gradcam.positive_attn_only = positive_attn_only

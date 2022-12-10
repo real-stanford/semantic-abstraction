@@ -23,6 +23,11 @@ from arm.optim.lamb import Lamb
 from typeguard import typechecked
 import logging
 from dataset import SceneUnderstandDataset
+from rich.logging import RichHandler
+
+logging.basicConfig(
+    level=logging.INFO, format="%(message)s", datefmt="[%X]", handlers=[RichHandler()]
+)
 
 patch_typeguard()  # use before @typechecked
 
