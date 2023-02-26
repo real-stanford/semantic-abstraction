@@ -38,7 +38,8 @@ if __name__ == "__main__":
         args=args,
         net_class=approaches[args.approach],
         dataset_class=dataset_class,
-        split_file_path=args.file_path + "/vool_split.pkl",
+        split_file_path=args.file_path
+        + ("/vool_split.pkl" if args.task == "vool" else "/ssc_split.pkl"),
         return_vis=True,
         ddp=ddp,
     )

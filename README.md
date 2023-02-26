@@ -251,7 +251,7 @@ For instance, to use GPU 0, 1, 2, and 3, use `--nproc_per_node=4` and `--gpus 0 
 
 For OVSSC on NYU
 ```sh
-python -m torch.distributed.run --nnodes=1 --nproc_per_node=1 eval.py --task ovssc  --file_path nyu_ovssc/ --merge_nyu_classes --gpus 0 --load models/ours/ovssc/ovssc.pth
+python -m torch.distributed.run --nnodes=1 --nproc_per_node=1 eval.py --task ovssc  --file_path nyu_ovssc/ --gpus 0 --load models/ours/ovssc/ovssc.pth
 ```
 
 Similarly, for VOOL
