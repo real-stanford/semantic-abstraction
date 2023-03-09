@@ -66,8 +66,10 @@ conda env create -f semabs.yml
 
 ## Models
 
-**Preferred approach**: Download the model checkpoints (~3.5GB) from this [Google Drive link](https://drive.google.com/file/d/1XJBOwoI7nJIa7BVXTVdq0B6rhBRgeUlG/view?usp=sharing). Unzip at the repo's root.
-
+Download the model checkpoints (~3.5GB) by running this command at the root of the repo
+```sh
+wget https://semantic-abstraction.cs.columbia.edu/downloads/models.tar.lz4  -O - | tar --use-compress-program=lz4 -xf -  -C ./ 
+```
 
 You should have the following directory structure
 
@@ -110,25 +112,18 @@ You should have the following directory structure
 11 directories, 21 files
 ```
 
-**Backup approach**: If the preferred approach doesn't work, run the following at the root of the repo
-```sh
-wget https://semantic-abstraction.cs.columbia.edu/downloads/models.tar.lz4  -O - | tar --use-compress-program=lz4 -xf -  -C ./ 
-```
 
 ## Dataset (Optional)
 
 To run the evaluation inference or training, you will need the dataset.
 
-**Preferred approach**: Download the dataset (~269GB) from this [Google Drive link](https://drive.google.com/file/d/1u7n1l63Bk9__KMD2QQaWg3I_hC7fjllh/view?usp=share_link). Unzip at the repo's root.
-
-
-**Backup approach**: If the preferred approach doesn't work, run the following at the root of the repo
+Download the dataset (~269GB) by running the following at the root of the repo
 ```sh 
 wget https://semantic-abstraction.cs.columbia.edu/downloads/dataset.tar.lz4  -O - | tar --use-compress-program=lz4 -xf -  -C ./
 ```
 
 
-We also preprocessed the (~53GB) NYU dataset for training and evaluation, which can be downloaded from [Google Drive link](https://drive.google.com/file/d/1kDXCjIPw7CQR8uOwBsgGR-ttMUyT24ma/view?usp=share_link) and unzipped at the repo's root, or by running the following at the root of the repo
+We also preprocessed the (~53GB) NYU dataset for training and evaluation
 ```sh 
 wget https://semantic-abstraction.cs.columbia.edu/downloads/nyu_ovssc.tar.lz4  -O - | tar --use-compress-program=lz4 -xf -  -C ./
 ```
